@@ -9,10 +9,19 @@ namespace FormsApp_SatisProjesi.Controllers
       
     
 
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            return View(Repository._Products);
+            var products = Repository._Products;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ViewBag.SearchString = searchString;
+                products = products.Where(p =>p.Name.ToLower().Contains(searchString)).ToList();
+            }
+            return View(products);
         }
+
+    
+
 
         public IActionResult Privacy()
         {
