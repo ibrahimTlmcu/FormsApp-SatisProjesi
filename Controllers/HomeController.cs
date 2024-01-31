@@ -1,5 +1,6 @@
 ﻿using FormsApp_SatisProjesi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 
 namespace FormsApp_SatisProjesi.Controllers
@@ -9,7 +10,7 @@ namespace FormsApp_SatisProjesi.Controllers
       
     
 
-        public IActionResult Index(string searchString)
+        public IActionResult Index(string searchString ,string category)
         {
             var products = Repository._Products;
             if (!String.IsNullOrEmpty(searchString))
@@ -17,15 +18,51 @@ namespace FormsApp_SatisProjesi.Controllers
                 ViewBag.SearchString = searchString;
                 products = products.Where(p =>p.Name.ToLower().Contains(searchString)).ToList();
             }
-            return View(products);
+
+            if (!String.IsNullOrEmpty(category))
+            {
+                products = products.Where(p=>p.CategoryId == int.Parse(category)).ToList();
+            }
+
+
+
+            //ViewBag Kullanarak
+            //ViewBag.price = new SelectList(Repository._Products, "Name","Price");
+            ViewBag.Categories = new SelectList(Repository.Categories,"CategoryId", "Name",category);
+            //en sondaki category secim yaptiktan sonra sutunun icinde yaziyor 
+            //yani sutun ici bos kalmiyor secim orda kaliyor
+
+            var model = new ProductViewModel
+            {
+                Products = products,
+                Categories = Repository.Categories,
+                SelectedCategory = category
+            };
+            return View(model);
+
+            
         }
 
-    
-
-
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult Create() 
         {
+            ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
             return View();
+        
+        }
+
+        [HttpPost]
+        public IActionResult Create(Product model)
+        {
+            if (ModelState.IsValid)
+            {
+                Repository.CreateProduct(model);
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
+            return View(model);
+
         }
 
     
