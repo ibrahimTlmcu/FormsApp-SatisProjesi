@@ -52,11 +52,28 @@ namespace FormsApp_SatisProjesi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product model,IFormFile imageFile)
+        public async Task<IActionResult> Create(Product model,IFormFile imageFile)
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", imageFile.FileName);34
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            var extension = Path.GetExtension(imageFile.FileName);// Gelen resmin uzaatnisini alma.
+            var randomFileName = string.Format($"{Guid.NewGuid().ToString()}{extension}");
+                 //Guid.NewGuid() dosyaya benzersiz bir isim atar.
+                //Dosyayi aldik ve sonuna uzanti kismini ekledik.
+
+          
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+            //Dosyanin kayit edilecegi yol.
             if (ModelState.IsValid)
             {
+                //path dosya yolu
+                //FileMode.Create ifadesi, dosyanın oluşturulacağını ve varsa üzerine yazılacağını belirtir.
+                //FileStream sınıfının bir örneği oluşturuluyor. Bu, dosyaya yazmak için bir akış sağlar.
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+                model.Image = randomFileName;
                 model.ProductId = Repository._Products.Count() + 1;
                 Repository.CreateProduct(model);
                 return RedirectToAction("Index");
