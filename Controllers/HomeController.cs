@@ -52,10 +52,12 @@ namespace FormsApp_SatisProjesi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product model)
+        public IActionResult Create(Product model,IFormFile imageFile)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", imageFile.FileName);34
             if (ModelState.IsValid)
             {
+                model.ProductId = Repository._Products.Count() + 1;
                 Repository.CreateProduct(model);
                 return RedirectToAction("Index");
             }

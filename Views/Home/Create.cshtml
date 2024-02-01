@@ -4,7 +4,7 @@
 }
 
 
-<form asp-controller="Home" asp-action="Create" method="post">
+<form asp-controller="Home" asp-action="Create" method="post" enctype="multipart/form-data" >
     <div asp-validation-summary="All"></div>
     @* Required kismindan gelen hatalar burada form bazinda gorunur*@
     <div class="mb-3">
@@ -18,11 +18,10 @@
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Image" class="form-label">Image</label>
-        <input asp-for="Image" class="form-control" />
-        <span asp-validation-for="Image"></span>
+    <div class="input-group mb-3">
+        <input type="file" name="imageFile" id="imageFile" class="form-control"/>
     </div>
+    
     <div class="mb-3">
         <label asp-for="CategoryId" class="form-label">Category</label>
         <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control">

@@ -15,12 +15,12 @@ namespace FormsApp_SatisProjesi.Models
         public string? Name { get; set; } 
 
 
-        [Required]
+        [Required(ErrorMessage = "Alan bos gecilemez")]// Turkcelestirme 
         [Range(0,100000)] //aralik icin kontrol
         [Display(Name = "Fiyat")]
         public decimal? Price { get; set; }
 
-        [Required]
+        
         [Display(Name = "Resim")]
         public string Image { get; set; } 
 
