@@ -8,8 +8,6 @@ namespace FormsApp_SatisProjesi.Controllers
     public class HomeController : Controller
     {
 
-
-
         public IActionResult Index(string searchString, string category)
         {
             var products = Repository._Products;
@@ -54,20 +52,33 @@ namespace FormsApp_SatisProjesi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product model, IFormFile imageFile)
         {
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-            var extension = Path.GetExtension(imageFile.FileName);// Gelen resmin uzaatnisini alma.
-            var randomFileName = string.Format($"{Guid.NewGuid().ToString()}{extension}");
-            //Guid.NewGuid() dosyaya benzersiz bir isim atar.
-            //Dosyayi aldik ve sonuna uzanti kismini ekledik.
+            
+        
+            var extension = "";
+
+            if(imageFile != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                extension = Path.GetExtension(imageFile.FileName);// Gelen resmin uzaatnisini alma.
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("", "Gecerli bir resim ciziniz");
+                }
+
+            }
 
 
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
-            //Dosyanin kayit edilecegi yol.
             if (ModelState.IsValid)
             {
                 if (imageFile != null)
                 {
+                    var randomFileName = string.Format($"{Guid.NewGuid().ToString()}{extension}");
+                    //Guid.NewGuid() dosyaya benzersiz bir isim atar.
+                    //Dosyayi aldik ve sonuna uzanti kismini ekledik.
+
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+                    //Dosyanin kayit edilecegi yol.
                     //path dosya yolu
                     //FileMode.Create ifadesi, dosyanın oluşturulacağını ve varsa üzerine yazılacağını belirtir.
                     //FileStream sınıfının bir örneği oluşturuluyor. Bu, dosyaya yazmak için bir akış sağlar.
@@ -75,12 +86,13 @@ namespace FormsApp_SatisProjesi.Controllers
                     {
                         await imageFile.CopyToAsync(stream);
                     }
-                }
 
-                model.Image = randomFileName;
-                model.ProductId = Repository._Products.Count() + 1;
-                Repository.CreateProduct(model);
-                return RedirectToAction("Index");
+                    model.Image = randomFileName;
+                    model.ProductId = Repository._Products.Count() + 1;
+                    Repository.CreateProduct(model);
+                    return RedirectToAction("Index");
+                }
+;
             }
 
             ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
@@ -95,7 +107,7 @@ namespace FormsApp_SatisProjesi.Controllers
                 return NotFound();
             }
             var entity = Repository._Products.FirstOrDefault(p => p.ProductId == id);
-
+            //Gelen id'ye gore entitiy forma gonderdik.
             if (entity == null)
             {
                 return NotFound();
@@ -105,7 +117,57 @@ namespace FormsApp_SatisProjesi.Controllers
 
             return View(entity);
         }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id ,Product model,IFormFile? imageFile)
+        {
+            if(id != model.ProductId)
+            {
+                return NotFound();
+            }
+            if(ModelState.IsValid)
+                //Gelen id repositry icinde aktif durumda mi kontrolu.
+            {
+                if(imageFile != null)
+                {
+                   
+                    var extension = Path.GetExtension(imageFile.FileName);// Gelen resmin uzaatnisini alma.
+                    var randomFileName = string.Format($"{Guid.NewGuid().ToString()}{extension}");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+                    //Guid.NewGuid() dosyaya benzersiz bir isim atar.
+                    //Dosyayi aldik ve sonuna uzanti kismini ekledik.
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+                    model.Image = randomFileName;
+                }
 
+                Repository.EditProduct(model);
 
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Categories = new SelectList(Repository.Categories, "CategoryId", "Name");
+
+            return View(model);
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var bulunanid = Repository._Products.FirstOrDefault(x => x.ProductId == id);
+            if(bulunanid == null)
+            {
+                return NotFound();
+
+            }
+        
+            Repository.DeleteProduct(bulunanid);
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -2,16 +2,17 @@
 @{
     ViewData["Title"] = "Create";
 }
-
-
 <form asp-controller="Home" asp-action="Edit" method="post" enctype="multipart/form-data" >
     <div asp-validation-summary="All"></div>
     @* Required kismindan gelen hatalar burada form bazinda gorunur*@
+
+    <input type="hidden" asp-for="ProductId"/>
     <div class="mb-3">
         <label asp-for="Name" class="form-label">Name</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name"></span>
         @* Required gelen hatalar tek tek gorunur*@
+
     </div>
     <div class="mb-3">
         <label asp-for="Price" class="form-label">Price</label>
@@ -35,7 +36,8 @@
         <input asp-for="IsActive" class="form-check" />
         <label asp-for="IsActive" class="form-check-label"> Is Active</label>
         <span asp-validation-for="IsActive"></span>
-
     </div>
+
     <button type="submit" class="btn btn-primary"> Kaydet </button>
+
 </form>

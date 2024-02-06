@@ -52,6 +52,31 @@
         {
             _products.Add(entity);
         }
+        public static void EditProduct(Product updatedProduct)
+        {
+            var entity = _products.FirstOrDefault(p => p.ProductId == updatedProduct.ProductId);
+            //Gelen veri veritabaninda olana esit ise onu sec
+
+            if (entity != null)
+            {
+                entity.Name = updatedProduct.Name;
+                entity.Price = updatedProduct.Price;
+                entity.Image = updatedProduct.Image;
+                entity.CategoryId = updatedProduct.CategoryId;
+
+                //Elimizdeki degerleri Product modelinden gelen degerlerle degistirdik.
+            }
+        }
+
+        public static void DeleteProduct(Product entity)
+        {
+            var deger = _products.FirstOrDefault(x => x.ProductId == entity.ProductId);
+
+            if(entity != null)
+            {
+                _products.Remove(entity);
+            }
+        }
 
         public static List<Category> Categories
         {
