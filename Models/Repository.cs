@@ -26,13 +26,13 @@
             _products.Add(new Product { ProductId = 4, Name = "iPhone 15", Price = 4000, IsActive = true, Image = "3.jpeg", CategoryId = 1 });
 
             // Başka bir bilgisayar ürünü ekleme
-            _products.Add(new Product { ProductId = 5, Name = "Ultrabook laptop 123", Price = 3500, IsActive = true, Image = "laptop.jpeg", CategoryId = 2 });
+            _products.Add(new Product { ProductId = 5, Name = "Ultrabook laptop 123", Price = 3500, IsActive = false, Image = "laptop.jpeg", CategoryId = 2 });
 
             // Başka bir telefon ürünü ekleme
             _products.Add(new Product { ProductId = 6, Name = "Google Pixel 6", Price = 2800, IsActive = true, Image = "4.jpeg", CategoryId = 1 });
 
             // Başka bir bilgisayar ürünü ekleme
-            _products.Add(new Product { ProductId = 7, Name = "Gaming Laptop XYZ", Price = 7000, IsActive = true, Image = "laptop3.jpeg", CategoryId = 2 });
+            _products.Add(new Product { ProductId = 7, Name = "Gaming Laptop XYZ", Price = 7000, IsActive = false, Image = "laptop3.jpeg", CategoryId = 2 });
 
             // Başka bir telefon ürünü ekleme
             _products.Add(new Product { ProductId = 8, Name = "OnePlus 9T", Price = 3200, IsActive = true, Image = "4.jpeg", CategoryId = 1 });

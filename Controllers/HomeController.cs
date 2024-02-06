@@ -169,5 +169,14 @@ namespace FormsApp_SatisProjesi.Controllers
             Repository.DeleteProduct(bulunanid);
             return RedirectToAction("Index");
         }
+
+        public IActionResult EditProducts(List<Product> Products)
+        {
+            foreach(var product in Products)
+            {
+                Repository.EditProduct(product);
+            }
+            return RedirectToAction("Index");  
+        }
     }
-}
+} 

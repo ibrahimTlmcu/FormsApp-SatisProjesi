@@ -19,10 +19,12 @@
             </div>
         </div>
     </form>
-
-
 </div>
 
+
+
+
+<form asp-action="EditProducts " method="post" >
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -34,22 +36,29 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var prd in Model.Products)
-        {
+            @for(var i =0; i <Model.Products.Count;i++)
+            {
             <tr>
-                <td>@prd.ProductId</td>
                 <td>
-                    <img src="/img/@prd.Image">
+                    @Model.Products[i].ProductId
+                    <input type="hidden" asp-for="@Model.Products[i].ProductId">
+                 </td>
+                <td>
+                        <img src="/img/@Model.Products[i].Image">
                 </td>
-                <td>@prd.Name</td>
-                <td>@prd.Price</td>
-                
+                    <td>@Model.Products[i].Name</td>
+                    <td>@Model.Products[i].Price</td>
                 <td>
-                    <a href="/Home/Edit/@prd.ProductId" class="btn btn-sn btn-primary">Edit</a>
-                    <a href="/Home/Delete/@prd.ProductId" class="btn btn-sn btn-danger">Delete</a>
+                    <input type="checkbox" asp-for="@Model.Products[i].IsActive" id="">
+                </td>
+                <td>
+                        <a href="/Home/Edit/@Model.Products[i].ProductId" class="btn btn-sn btn-primary">Edit</a>
+                        <a href="/Home/Delete/@Model.Products[i].ProductId" class="btn btn-sn btn-danger">Delete</a>
                 </td>
             </tr>            
         }
     </tbody>
 </table>
 
+
+</form>
